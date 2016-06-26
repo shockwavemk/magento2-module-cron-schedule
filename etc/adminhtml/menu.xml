@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Shockwavemk_CronSchedule::shockwavemk_cronschedule_cronjobs" title="Cronjobs" module="Shockwavemk_CronSchedule" sortOrder="50" parent="Magento_Backend::system" resource="Shockwavemk_CronSchedule::view"/>
+        <add id="Shockwavemk_CronSchedule::shockwavemk_cronschedule_cronjobs_view" title="View Cronjob Configuration" module="Shockwavemk_CronSchedule" sortOrder="60" parent="Shockwavemk_CronSchedule::shockwavemk_cronschedule_cronjobs" resource="Shockwavemk_CronSchedule::view" action="cronschedule/index/Index"/>
+    </menu>
+</config>

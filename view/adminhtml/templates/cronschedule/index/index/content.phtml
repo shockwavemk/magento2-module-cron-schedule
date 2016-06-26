@@ -1,0 +1,20 @@
+<div class="fieldset-wrapper customer-information">
+    <?php
+        $html = __('Content not available.');
+
+        /** @var Zend_Mime_Part $bodyHtml */
+        $bodyHtml = $this->getMail()->getMessage()->getBodyHtml();
+
+        if(!empty($bodyHtml)) {
+            $html = $bodyHtml->getContent();
+            $html = quoted_printable_decode($html);
+        }
+
+    ?>
+    <div class="iframe-wrapper">
+        <iframe src="data:text/html;charset=UTF-8;base64,<?php echo base64_encode($html) ?>" style="width:100%; height: 900px;" class="iframe"></iframe>
+    </div>
+    <div class="iframe-wrapper">
+        <iframe src="data:text/html;charset=UTF-8;base64,<?php echo base64_encode('<pre>' . $this->getUnstructuredData() . '</pre>')?>" style="width:100%; height: 300px;" class="iframe"></iframe>
+    </div>
+</div>
