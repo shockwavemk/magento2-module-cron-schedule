@@ -3,7 +3,7 @@
  * Copyright 2016 Shockwave-Design - J. & M. Kramer, all rights reserved.
  * See LICENSE.txt for license details.
  */
-namespace Shockwavemk\CronSchedule\Block\Adminhtml\Mail\Edit;
+namespace Shockwavemk\CronSchedule\Block\Adminhtml\Cronschedule\Index;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\RegistryConstants;
