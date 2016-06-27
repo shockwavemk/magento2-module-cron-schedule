@@ -1,20 +1,69 @@
 <div class="fieldset-wrapper customer-information">
-    <?php
-        $html = __('Content not available.');
-
-        /** @var Zend_Mime_Part $bodyHtml */
-        $bodyHtml = $this->getMail()->getMessage()->getBodyHtml();
-
-        if(!empty($bodyHtml)) {
-            $html = $bodyHtml->getContent();
-            $html = quoted_printable_decode($html);
+    <style type="text/css">
+        .vis-item.success {
+            background-color: greenyellow;
+            border-color: green;
         }
 
-    ?>
-    <div class="iframe-wrapper">
-        <iframe src="data:text/html;charset=UTF-8;base64,<?php echo base64_encode($html) ?>" style="width:100%; height: 900px;" class="iframe"></iframe>
-    </div>
-    <div class="iframe-wrapper">
-        <iframe src="data:text/html;charset=UTF-8;base64,<?php echo base64_encode('<pre>' . $this->getUnstructuredData() . '</pre>')?>" style="width:100%; height: 300px;" class="iframe"></iframe>
-    </div>
+        /* create a custom sized dot at the bottom of the red item */
+        .vis-item.missed {
+            background-color: red;
+            border-color: darkred;
+            color: white;
+        }
+
+        .vis-item.pending {
+            background-color: gold;
+            border-color: orange;
+        }
+        .vis-item.vis-selected.pending {
+            /* custom colors for selected orange items */
+            background-color: orange;
+            border-color: orangered;
+        }
+
+        .vis-item.running {
+            background-color: magenta;
+            border-color: purple;
+            color: white;
+        }
+
+        /* our custom classes overrule the styles for selected events,
+           so lets define a new style for the selected events */
+        .vis-item.vis-selected {
+            background-color: white;
+            border-color: black;
+            color: black;
+            box-shadow: 0 0 10px gray;
+        }
+    </style>
+
+    <div id="visualization"></div>
+
+    <script type="text/javascript">
+        (function () {
+            require.config({
+                paths: {
+                    vis: '/static/adminhtml/Magento/backend/en_US/Shockwavemk_CronSchedule/js/vis.min'
+                }
+            });
+        })();
+
+        require(['vis'], function (vis) {
+            var container = document.getElementById('visualization');
+            var items = new vis.DataSet(<?php echo json_encode($this->getCronjobData()); ?>);
+            var options = {
+                showCurrentTime: true
+            };
+
+            var groups = new vis.DataSet(<?php echo json_encode($this->getCronjobGroups()); ?>);
+
+            var timeline = new vis.Timeline(container);
+            timeline.setOptions(options);
+            timeline.setGroups(groups);
+            timeline.setItems(items);
+        });
+
+        // static/adminhtml/Magento/backend/en_US/Shockwavemk_CronSchedule/css/vis.min.css
+    </script>
 </div>
