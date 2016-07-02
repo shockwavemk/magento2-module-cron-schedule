@@ -1,5 +1,10 @@
 <div class="fieldset-wrapper customer-information">
     <style type="text/css">
+
+        .vis-time-axis .vis-grid.vis-odd {
+            background: #f5f5f5;
+        }
+
         .vis-item.success {
             background-color: greenyellow;
             border-color: green;
@@ -44,26 +49,58 @@
         (function () {
             require.config({
                 paths: {
-                    vis: '/static/adminhtml/Magento/backend/en_US/Shockwavemk_CronSchedule/js/vis.min'
+                    vis: 'Shockwavemk_CronSchedule/js/vis.min'
                 }
             });
         })();
 
-        require(['vis'], function (vis) {
-            var container = document.getElementById('visualization');
-            var items = new vis.DataSet(<?php echo json_encode($this->getCronjobData()); ?>);
-            var options = {
-                showCurrentTime: true
-            };
+        require(['vis','jquery'], function (vis,$) {
 
-            var groups = new vis.DataSet(<?php echo json_encode($this->getCronjobGroups()); ?>);
+            $(document).ready(function () {
+                var container = document.getElementById('visualization');
+                var cronjobs;
 
-            var timeline = new vis.Timeline(container);
-            timeline.setOptions(options);
-            timeline.setGroups(groups);
-            timeline.setItems(items);
+                var customDate = new Date();
+                var options = {
+                    showCurrentTime: true
+                };
+
+                var items = new vis.DataSet(<?php echo json_encode($this->getCronjobData()); ?>);
+                var groups = new vis.DataSet(<?php echo json_encode($this->getCronjobGroups()); ?>);
+
+                var timeline = new vis.Timeline(container);
+                timeline.setOptions(options);
+                timeline.setGroups(groups);
+                timeline.setItems(items);
+
+                var start = new Date((new Date()).getTime() - 10 * 60 * 1000);
+                var end   = new Date((new Date()).getTime() + 10 * 60 * 1000);
+                timeline.setWindow(start, end, {animation: false});
+
+                var myInterval = setInterval(function () {
+
+                    var url = '<?php echo $this->getUrl('cronschedule/ajax/cronjobs'); ?>';
+
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            isAjax: 'true',
+                            form_key: '<?php echo $this->getFormKey(); ?>'
+                        },
+                        async: true,
+                        global: false,
+                        "throws": true
+                    }).done(function( data ) {
+
+                        cronjobs = data.cronjobs;
+                        timeline.setItems(cronjobs);
+
+                    });
+
+                },20000);
+            });
         });
-
-        // static/adminhtml/Magento/backend/en_US/Shockwavemk_CronSchedule/css/vis.min.css
     </script>
 </div>
