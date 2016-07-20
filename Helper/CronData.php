@@ -56,6 +56,11 @@ class CronData extends \Magento\Framework\App\Helper\AbstractHelper
                 $title .= 'Executed at: '. $schedule->getFinishedAt() . "\n";
             }
 
+            /** @noinspection IsEmptyFunctionUsageInspection */
+            if(!empty($schedule->getMessages())) {
+                $title .= 'Messages: '. $schedule->getMessages() . "\n";
+            }
+
             $newSchedule['id'] = $schedule->getScheduleId();
             $newSchedule['content'] = $schedule->getStatus();
             $newSchedule['group'] = $schedule->getJobCode();
