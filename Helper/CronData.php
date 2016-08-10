@@ -81,15 +81,19 @@ class CronData extends \Magento\Framework\App\Helper\AbstractHelper
         $i = 0;
 
         foreach ($this->config->getJobs() as $job) {
-            foreach ($job as $group) {
-                $shedule = !empty($group['schedule']) ? $group['schedule'] : '';
+            foreach ($job as $index => $group) {
+                $shedule = !empty($group['schedule']) ? $group['schedule'] : __('No schedule defined');
+                $method = !empty($group['method']) ? $group['method'] : __('No method defined');
+                $instance = !empty($group['instance']) ? $group['instance'] : __('No instance defined');
+                $name = !empty($group['name']) ? $group['name'] : uniqid($index . ': ', false);
+
 
                 $cronjobGroups[] = [
-                    'content' => $group['name'] . '<br/><span style="color:#BBB;">(' . $shedule . ')</span>',
-                    'id' => $group['name'],
+                    'content' => $name . '<br/><span style="color:#BBB;">(' . $shedule . ')</span>',
+                    'id' => $name,
                     'value' => $i++,
-                    'className' => $group['name'],
-                    'title' => $group['instance'] . '::' . $group['method']
+                    'className' => $name,
+                    'title' => $instance . '::' . $method
                 ];
             }
         }
